@@ -22,13 +22,22 @@ def save_images(webpage, visuals, image_path, aspect_ratio=1.0, width=256):
     This function will save images stored in 'visuals' to the HTML file specified by 'webpage'.
     """
     image_dir = webpage.get_image_dir()
-    name = Path(image_path[0]).stem
+    nameA = Path(image_path[0][0]).stem
+    nameB = Path(image_path[1][0]).stem
 
-    webpage.add_header(name)
+    webpage.add_header(' ||| '.join([nameA, nameB]))
     ims, txts, links = [], [], []
     for label, im_data in visuals.items():
         im = util.tensor2im(im_data)
-        image_name = f"{name}_{label}.png"
+
+        if label in ('real_A', 'fake_B', 'rec_A'):
+            image_name = nameA
+        elif label in ('real_B', 'fake_A', 'rec_B'):
+            image_name = nameB
+        else:
+            raise ValueError('label not in ["real_A", "fake_B", "rec_A", "real_B", "fake_A", "rec_B"]')
+        image_name += "_" + label + ".png"
+
         save_path = image_dir / image_name
         util.save_image(im, save_path, aspect_ratio=aspect_ratio)
         ims.append(image_name)
@@ -118,7 +127,7 @@ class Visualizer:
                 util.save_image(image_numpy, img_path)
 
             # update website
-            webpage = html.HTML(self.web_dir, f"Experiment name = {self.name}", refresh=1)
+            webpage = html.HTML(self.web_dir, f"Experiment name = {self.name}", refresh=0)
             for n in range(epoch, 0, -1):
                 webpage.add_header(f"epoch [{n}]")
                 ims, txts, links = [], [], []

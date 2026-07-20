@@ -110,6 +110,10 @@ class CycleGANModel(BaseModel):
         self.real_A = input["A" if AtoB else "B"].to(self.device)
         self.real_B = input["B" if AtoB else "A"].to(self.device)
         self.image_paths = input["A_paths" if AtoB else "B_paths"]
+        path_names = ["A_paths", "B_paths"]
+        if not AtoB:
+            path_names = path_names[::-1]
+        self.image_paths = [input[path_name_k] for path_name_k in path_names]
 
     def forward(self):
         """Run forward pass; called by both functions <optimize_parameters> and <test>."""
