@@ -9,7 +9,8 @@ import os
 import torch.distributed as dist
 
 
-def save_images(webpage, visuals, image_path, aspect_ratio=1.0, width=256):
+def save_images(
+        webpage, visuals, image_path, aspect_ratio=1.0, width=256, image_extension=".png", image_format=None):
     """Save images to the disk.
 
     Parameters:
@@ -18,6 +19,8 @@ def save_images(webpage, visuals, image_path, aspect_ratio=1.0, width=256):
         image_path (str)         -- the string is used to create image paths
         aspect_ratio (float)     -- the aspect ratio of saved images
         width (int)              -- the images will be resized to width x width
+        image_extension (str)    -- the format of images to save, such as .png, .jpg, .bmp, .tif
+        image_format (str)       -- the file format of the images to save, such as 'PNG', 'JPEG', 'TIFF'. If None, automatically choose from image_extension.
 
     This function will save images stored in 'visuals' to the HTML file specified by 'webpage'.
     """
@@ -36,10 +39,10 @@ def save_images(webpage, visuals, image_path, aspect_ratio=1.0, width=256):
             image_name = nameB
         else:
             raise ValueError('label not in ["real_A", "fake_B", "rec_A", "real_B", "fake_A", "rec_B"]')
-        image_name += "_" + label + ".png"
+        image_name += "_" + label + image_extension
 
         save_path = image_dir / image_name
-        util.save_image(im, save_path, aspect_ratio=aspect_ratio)
+        util.save_image(im, save_path, aspect_ratio=aspect_ratio, image_format=image_format)
         ims.append(image_name)
         txts.append(label)
         links.append(image_name)
@@ -85,6 +88,22 @@ class Visualizer:
             self.img_dir = self.web_dir / "images"
             print(f"create web directory {self.web_dir}...")
             util.mkdirs([self.web_dir, self.img_dir])
+
+            self.id_out_img_format = opt.id_output_image_format
+            if self.id_out_img_format == 0:
+                self.name_out_img_format = 'PNG'
+                self.filename_out_img_format = '.png'
+
+            elif self.id_out_img_format == 1:
+                self.name_out_img_format = 'JPEG'
+                self.filename_out_img_format = '.jpg'
+
+            elif self.id_out_img_format == 2:
+                self.name_out_img_format = 'TIFF'
+                self.filename_out_img_format = '.tif'
+            else:
+                raise ValueError('opt.id_output_image_format should be 0, 1 or 2')
+
         # create a logging file to store training losses
         self.log_name = Path(opt.checkpoints_dir) / opt.name / "loss_log.txt"
         with open(self.log_name, "a") as log_file:
@@ -123,8 +142,8 @@ class Visualizer:
             # save images to the disk
             for label, image in visuals.items():
                 image_numpy = util.tensor2im(image)
-                img_path = self.img_dir / f"epoch{epoch:03d}_{label}.png"
-                util.save_image(image_numpy, img_path)
+                img_path = self.img_dir / (f"epoch{epoch:03d}_{label}" + self.filename_out_img_format)
+                util.save_image(image_numpy, img_path, image_format=self.name_out_img_format)
 
             # update website
             webpage = html.HTML(self.web_dir, f"Experiment name = {self.name}", refresh=0)
@@ -133,7 +152,7 @@ class Visualizer:
                 ims, txts, links = [], [], []
 
                 for label, image in visuals.items():
-                    img_path = f"epoch{n:03d}_{label}.png"
+                    img_path = f"epoch{n:03d}_{label}" + self.filename_out_img_format
                     ims.append(img_path)
                     txts.append(label)
                     links.append(img_path)
