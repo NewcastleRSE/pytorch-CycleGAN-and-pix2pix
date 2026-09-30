@@ -9,7 +9,7 @@ import os
 import torch.distributed as dist
 
 
-def save_images(webpage, visuals, image_path, aspect_ratio=1.0, width=256):
+def save_images(webpage, visuals, image_path, aspect_ratio=1.0, width=256, save_tiffs=False):
     """Save images to the disk.
 
     Parameters:
@@ -18,6 +18,7 @@ def save_images(webpage, visuals, image_path, aspect_ratio=1.0, width=256):
         image_path (str)         -- the string is used to create image paths
         aspect_ratio (float)     -- the aspect ratio of saved images
         width (int)              -- the images will be resized to width x width
+        save_tiffs (bool)        -- if True, also save images as TIFF. Default is False.
 
     This function will save images stored in 'visuals' to the HTML file specified by 'webpage'.
     """
@@ -31,18 +32,23 @@ def save_images(webpage, visuals, image_path, aspect_ratio=1.0, width=256):
         im = util.tensor2im(im_data)
 
         if label in ('real_A', 'fake_B', 'rec_A'):
-            image_name = nameA
+            img_filename_no_ext = nameA
         elif label in ('real_B', 'fake_A', 'rec_B'):
-            image_name = nameB
+            img_filename_no_ext = nameB
         else:
             raise ValueError('label not in ["real_A", "fake_B", "rec_A", "real_B", "fake_A", "rec_B"]')
-        image_name += "_" + label + ".png"
+        img_filename_no_ext += "_" + label
+        img_filename = img_filename_no_ext + '.png'
 
-        save_path = image_dir / image_name
-        util.save_image(im, save_path, aspect_ratio=aspect_ratio)
-        ims.append(image_name)
+        save_path = image_dir / img_filename
+        util.save_image(im, save_path, aspect_ratio=aspect_ratio, image_format="PNG")
+        if save_tiffs:
+            tiff_path = (image_dir.parent / 'tiffs') / (img_filename_no_ext + '.tif')
+            util.save_image(im, tiff_path, aspect_ratio=aspect_ratio, image_format="TIFF")
+
+        ims.append(img_filename)
         txts.append(label)
-        links.append(image_name)
+        links.append(img_filename)
     webpage.add_images(ims, txts, links, width=width)
 
 
@@ -83,8 +89,27 @@ class Visualizer:
         if self.use_html:  # create an HTML object at <checkpoints_dir>/web/; images will be saved under <checkpoints_dir>/web/images/
             self.web_dir = Path(opt.checkpoints_dir) / opt.name / "web"
             self.img_dir = self.web_dir / "images"
+
+            dirs_to_create = [self.web_dir, self.img_dir]
+
+            if isinstance(opt.save_tiffs, bool):
+                self.save_tiffs = opt.save_tiffs
+                if self.save_tiffs:
+                    self.dir_tiffs = self.web_dir / "tiffs"
+                    dirs_to_create.append(self.dir_tiffs)
+                else:
+                    self.dir_tiffs = None
+            else:
+                raise ValueError("opt.save_tiffs must be a boolean")
+
             print(f"create web directory {self.web_dir}...")
-            util.mkdirs([self.web_dir, self.img_dir])
+            util.mkdirs(dirs_to_create)
+
+        else:
+            self.save_tiffs = False
+            self.dir_tiffs = None
+
+
         # create a logging file to store training losses
         self.log_name = Path(opt.checkpoints_dir) / opt.name / "loss_log.txt"
         with open(self.log_name, "a") as log_file:
@@ -123,8 +148,14 @@ class Visualizer:
             # save images to the disk
             for label, image in visuals.items():
                 image_numpy = util.tensor2im(image)
-                img_path = self.img_dir / f"epoch{epoch:03d}_{label}.png"
-                util.save_image(image_numpy, img_path)
+
+                img_filename_no_ext = f"epoch{epoch:03d}_{label}"
+                img_path = self.img_dir / (img_filename_no_ext + ".png")
+                util.save_image(image_numpy, img_path, image_format="PNG")
+
+                if self.save_tiffs:
+                    tiff_path = self.dir_tiffs / (img_filename_no_ext + ".tif")
+                    util.save_image(image_numpy, tiff_path, image_format="TIFF")
 
             # update website
             webpage = html.HTML(self.web_dir, f"Experiment name = {self.name}", refresh=0)
