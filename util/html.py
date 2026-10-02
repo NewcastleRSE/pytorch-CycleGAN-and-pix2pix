@@ -11,20 +11,32 @@ class HTML:
     It is based on Python library 'dominate', a Python library for creating and manipulating HTML documents using a DOM API.
     """
 
-    def __init__(self, web_dir, title, refresh=0):
+    def __init__(self, web_dir, title, refresh=0, save_tiffs=False):
         """Initialize the HTML classes
 
         Parameters:
             web_dir (str) -- a directory that stores the webpage. HTML file will be created at <web_dir>/index.html; images will be saved at <web_dir/images/
             title (str)   -- the webpage name
             refresh (int) -- how often the website refresh itself; if 0; no refreshing
+            save_tiffs (bool) -- whether to also save TIFF images
         """
         self.title = title
         self.web_dir = Path(web_dir)
         self.img_dir = self.web_dir / "images"
 
+        if isinstance(save_tiffs, bool):
+            self.save_tiffs = save_tiffs
+        else:
+            raise ValueError("save_tiffs must be a boolean")
+
         self.web_dir.mkdir(parents=True, exist_ok=True)
         self.img_dir.mkdir(parents=True, exist_ok=True)
+
+        if self.save_tiffs:
+            self.tiff_dir = self.img_dir.parent / 'tiffs'
+            self.tiff_dir.mkdir(parents=True, exist_ok=True)
+        else:
+            self.tiff_dir = None
 
         self.doc = dominate.document(title=title)
         if refresh > 0:
@@ -34,6 +46,14 @@ class HTML:
     def get_image_dir(self):
         """Return the directory that stores images"""
         return self.img_dir
+
+
+    def get_tiff_dir(self):
+        """Return the directory that stores TIFF images"""
+        if self.save_tiffs:
+            return self.tiff_dir
+        else:
+            return None
 
     def add_header(self, text):
         """Insert a header to the HTML file

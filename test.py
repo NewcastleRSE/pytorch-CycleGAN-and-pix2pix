@@ -65,7 +65,8 @@ if __name__ == "__main__":
     if opt.load_iter > 0:  # load_iter is 0 by default
         web_dir = Path(f"{web_dir}_iter{opt.load_iter}")
     print(f"creating web directory {web_dir}")
-    webpage = html.HTML(web_dir, f"Experiment = {opt.name}, Phase = {opt.phase}, Epoch = {opt.epoch}")
+    webpage = html.HTML(
+        web_dir, f"Experiment = {opt.name}, Phase = {opt.phase}, Epoch = {opt.epoch}", save_tiffs=save_tiffs)
     # test with eval mode. This only affects layers like batchnorm and dropout.
     # For [pix2pix]: we use batchnorm and dropout in the original pix2pix. You can experiment it with and without eval() mode.
     # For [CycleGAN]: It should not affect CycleGAN as CycleGAN uses instancenorm without dropout.
@@ -81,5 +82,5 @@ if __name__ == "__main__":
         if i % 5 == 0:  # save images to an HTML file
             print(f"processing ({i:04d})-th image... {img_path}")
         save_images(
-            webpage, visuals, img_path, aspect_ratio=opt.aspect_ratio, width=opt.display_winsize, save_tiffs=save_tiffs)
+            webpage, visuals, img_path, aspect_ratio=opt.aspect_ratio, width=opt.display_winsize)
     webpage.save()  # save the HTML

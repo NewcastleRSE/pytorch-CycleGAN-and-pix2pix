@@ -9,7 +9,7 @@ import os
 import torch.distributed as dist
 
 
-def save_images(webpage, visuals, image_path, aspect_ratio=1.0, width=256, save_tiffs=False):
+def save_images(webpage, visuals, image_path, aspect_ratio=1.0, width=256):
     """Save images to the disk.
 
     Parameters:
@@ -18,11 +18,12 @@ def save_images(webpage, visuals, image_path, aspect_ratio=1.0, width=256, save_
         image_path (str)         -- the string is used to create image paths
         aspect_ratio (float)     -- the aspect ratio of saved images
         width (int)              -- the images will be resized to width x width
-        save_tiffs (bool)        -- if True, also save images as TIFF. Default is False.
 
     This function will save images stored in 'visuals' to the HTML file specified by 'webpage'.
     """
     image_dir = webpage.get_image_dir()
+    tiff_dir = webpage.get_tiff_dir()
+
     nameA = Path(image_path[0][0]).stem
     nameB = Path(image_path[1][0]).stem
 
@@ -42,8 +43,8 @@ def save_images(webpage, visuals, image_path, aspect_ratio=1.0, width=256, save_
 
         save_path = image_dir / img_filename
         util.save_image(im, save_path, aspect_ratio=aspect_ratio, image_format="PNG")
-        if save_tiffs:
-            tiff_path = (image_dir.parent / 'tiffs') / (img_filename_no_ext + '.tif')
+        if webpage.save_tiffs:
+            tiff_path = tiff_dir / (img_filename_no_ext + '.tif')
             util.save_image(im, tiff_path, aspect_ratio=aspect_ratio, image_format="TIFF")
 
         ims.append(img_filename)
