@@ -115,10 +115,15 @@ cd pytorch-CycleGAN-and-pix2pix
 conda env create -f environment.yml
 ```
 
-and then activate the environment by
+Activate the environment by
 
 ```bash
 conda activate pytorch-img2img
+```
+
+Then, install pyTorch and CUDA with
+```bash
+python -m pip install torch==2.8.0 torchvision==0.23.0 --index-url https://download.pytorch.org/whl/cu129
 ```
 
 - For Docker users, we provide the pre-built Docker image and Dockerfile. Please refer to our [Docker](docs/docker.md) page.
