@@ -51,21 +51,11 @@ if __name__ == "__main__":
     opt.serial_batches = True  # disable data shuffling; comment this line if results on randomly chosen images are needed.
     opt.no_flip = True  # no flip; comment this line if results on flipped images are needed.
 
-    id_out_img_format = opt.id_output_image_format
-    if id_out_img_format == 0:
-        name_out_img_format = 'PNG'
-        filename_out_img_format = '.png'
-
-    elif id_out_img_format == 1:
-        name_out_img_format = 'JPEG'
-        filename_out_img_format = '.jpg'
-
-    elif id_out_img_format == 2:
-        name_out_img_format = 'TIFF'
-        filename_out_img_format = '.tif'
+    if isinstance(opt.save_tiffs, bool):
+        save_tiffs = opt.save_tiffs
     else:
-        raise ValueError('opt.id_output_image_format should be 0, 1 or 2')
-    
+        raise ValueError("opt.save_tiffs must be a boolean")
+
     dataset = create_dataset(opt)  # create a dataset given opt.dataset_mode and other options
     model = create_model(opt)  # create a model given opt.model and other options
     model.setup(opt)  # regular setup: load and print networks; create schedulers
@@ -75,7 +65,8 @@ if __name__ == "__main__":
     if opt.load_iter > 0:  # load_iter is 0 by default
         web_dir = Path(f"{web_dir}_iter{opt.load_iter}")
     print(f"creating web directory {web_dir}")
-    webpage = html.HTML(web_dir, f"Experiment = {opt.name}, Phase = {opt.phase}, Epoch = {opt.epoch}")
+    webpage = html.HTML(
+        web_dir, f"Experiment = {opt.name}, Phase = {opt.phase}, Epoch = {opt.epoch}", save_tiffs=save_tiffs)
     # test with eval mode. This only affects layers like batchnorm and dropout.
     # For [pix2pix]: we use batchnorm and dropout in the original pix2pix. You can experiment it with and without eval() mode.
     # For [CycleGAN]: It should not affect CycleGAN as CycleGAN uses instancenorm without dropout.
@@ -91,7 +82,5 @@ if __name__ == "__main__":
         if i % 5 == 0:  # save images to an HTML file
             print(f"processing ({i:04d})-th image... {img_path}")
         save_images(
-            webpage, visuals, img_path, aspect_ratio=opt.aspect_ratio, width=opt.display_winsize,
-            image_extension=filename_out_img_format, image_format=name_out_img_format)
-
+            webpage, visuals, img_path, aspect_ratio=opt.aspect_ratio, width=opt.display_winsize)
     webpage.save()  # save the HTML
