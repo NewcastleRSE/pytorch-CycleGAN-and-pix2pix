@@ -105,7 +105,7 @@ ZeroCostDL4Mic Colab notebook: [CycleGAN](https://colab.research.google.com/gith
 - Clone this repo:
 
 ```bash
-git clone https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix
+git clone git@github.com:NewcastleRSE/pytorch-CycleGAN-and-pix2pix.git
 cd pytorch-CycleGAN-and-pix2pix
 ```
 
