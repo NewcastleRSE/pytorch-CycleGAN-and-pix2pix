@@ -121,7 +121,7 @@ Activate the environment by
 conda activate pytorch-img2img
 ```
 
-Then, install pyTorch and CUDA with
+Then, install PyTorch and CUDA with
 ```bash
 python -m pip install torch==2.8.0 torchvision==0.23.0 --index-url https://download.pytorch.org/whl/cu129
 ```
