@@ -70,8 +70,8 @@ if [ "$i" -eq 0 ] || [ "$i" -eq -1 ]; then
   echo "Training 2D CycleGAN on images with masked boutons..."
 
   python train.py --dataroot ./datasets/vesicles_2d_tiff/convexhull_combined --name vesicles_with_masked_terminals_cyclegan_2d_tiff --model cycle_gan --input_nc 1 --output_nc 1 --num_threads 24 --batch_size 6 --load_size 256 --crop_size 256 --preprocess none --no_flip --save_tiffs
-  python test.py --dataroot ./datasets/vesicles_2d_tiff/convexhull_combined --name vesicles_with_masked_terminals_cyclegan_2d_tiff --model cycle_gan --input_nc 1 --output_nc 1 --num_threads 24 --batch_size 6 --load_size 256 --crop_size 256 --preprocess none --no_flip --save_tiffs --no_dropout --phase test --eval --num_test 1000000
-  python test.py --dataroot ./datasets/vesicles_2d_tiff/convexhull_combined --name vesicles_with_masked_terminals_cyclegan_2d_tiff --model cycle_gan --input_nc 1 --output_nc 1 --num_threads 24 --batch_size 6 --load_size 256 --crop_size 256 --preprocess none --no_flip --save_tiffs --no_dropout --phase test_all_xy_slices --eval --num_test 1000000
+  python test.py --dataroot ./datasets/vesicles_2d_tiff/convexhull_combined --name vesicles_with_masked_terminals_cyclegan_2d_tiff --model cycle_gan --input_nc 1 --output_nc 1 --num_threads 24 --batch_size 6 --load_size 256 --crop_size 256 --preprocess none --no_flip --save_tiffs --eval --no_dropout --num_test 1000000 --phase test
+  python test.py --dataroot ./datasets/vesicles_2d_tiff/convexhull_combined --name vesicles_with_masked_terminals_cyclegan_2d_tiff --model cycle_gan --input_nc 1 --output_nc 1 --num_threads 24 --batch_size 6 --load_size 256 --crop_size 256 --preprocess none --no_flip --save_tiffs --eval --no_dropout --num_test 1000000 --phase test_all_xy_slices
 
   echo
 fi
@@ -84,8 +84,8 @@ if [ "$i" -eq 1 ] || [ "$i" -eq -1 ]; then
   echo "Training 2D CycleGAN on images with masked vesicles..."
 
   python train.py --dataroot ./datasets/vesicles_2d_tiff/vesicle_combined --name vesicles_with_masked_vesicles_cyclegan_2d_tiff --model cycle_gan --input_nc 1 --output_nc 1 --num_threads 24 --batch_size 6 --load_size 256 --crop_size 256 --preprocess none --no_flip --save_tiffs
-  python test.py --dataroot ./datasets/vesicles_2d_tiff/vesicle_combined --name vesicles_with_masked_vesicles_cyclegan_2d_tiff --model cycle_gan --input_nc 1 --output_nc 1 --num_threads 24 --batch_size 6 --load_size 256 --crop_size 256 --preprocess none --no_flip --save_tiffs --no_dropout --phase test --eval --num_test 1000000
-  python test.py --dataroot ./datasets/vesicles_2d_tiff/vesicle_combined --name vesicles_with_masked_vesicles_cyclegan_2d_tiff --model cycle_gan --input_nc 1 --output_nc 1 --num_threads 24 --batch_size 6 --load_size 256 --crop_size 256 --preprocess none --no_flip --save_tiffs --no_dropout --phase test_all_xy_slices --eval --num_test 1000000
+  python test.py --dataroot ./datasets/vesicles_2d_tiff/vesicle_combined --name vesicles_with_masked_vesicles_cyclegan_2d_tiff --model cycle_gan --input_nc 1 --output_nc 1 --num_threads 24 --batch_size 6 --load_size 256 --crop_size 256 --preprocess none --no_flip --save_tiffs --eval --no_dropout --num_test 1000000 --phase test
+  python test.py --dataroot ./datasets/vesicles_2d_tiff/vesicle_combined --name vesicles_with_masked_vesicles_cyclegan_2d_tiff --model cycle_gan --input_nc 1 --output_nc 1 --num_threads 24 --batch_size 6 --load_size 256 --crop_size 256 --preprocess none --no_flip --save_tiffs --eval --no_dropout --num_test 1000000 --phase test_all_xy_slices
 
   echo
 fi
@@ -98,8 +98,8 @@ if [ "$i" -eq 2 ] || [ "$i" -eq -1 ]; then
   echo "Training 2.5D CycleGAN on images with masked boutons..."
 
   python train.py --dataroot ./datasets/vesicles_2.5d_tiff/convexhull_combined --name vesicles_with_masked_terminals_cyclegan_2.5d_tiff --model cycle_gan --input_nc 3 --output_nc 3 --num_threads 24 --batch_size 6 --load_size 256 --crop_size 256 --preprocess none --no_flip --save_tiffs
-  python test.py --dataroot ./datasets/vesicles_2.5d_tiff/convexhull_combined --name vesicles_with_masked_terminals_cyclegan_2.5d_tiff --model cycle_gan --input_nc 3 --output_nc 3 --num_threads 24 --batch_size 6 --load_size 256 --crop_size 256 --preprocess none --no_flip --save_tiffs --no_dropout --phase test --eval --num_test 1000000
-  python test.py --dataroot ./datasets/vesicles_2.5d_tiff/convexhull_combined --name vesicles_with_masked_terminals_cyclegan_2.5d_tiff --model cycle_gan --input_nc 3 --output_nc 3 --num_threads 24 --batch_size 6 --load_size 256 --crop_size 256 --preprocess none --no_flip --save_tiffs --no_dropout --phase test_all_xy_slices --eval --num_test 1000000
+  python test.py --dataroot ./datasets/vesicles_2.5d_tiff/convexhull_combined --name vesicles_with_masked_terminals_cyclegan_2.5d_tiff --model cycle_gan --input_nc 3 --output_nc 3 --num_threads 24 --batch_size 6 --load_size 256 --crop_size 256 --preprocess none --no_flip --save_tiffs --eval --no_dropout --num_test 1000000 --phase test
+  python test.py --dataroot ./datasets/vesicles_2.5d_tiff/convexhull_combined --name vesicles_with_masked_terminals_cyclegan_2.5d_tiff --model cycle_gan --input_nc 3 --output_nc 3 --num_threads 24 --batch_size 6 --load_size 256 --crop_size 256 --preprocess none --no_flip --save_tiffs --eval --no_dropout --num_test 1000000 --phase test_all_xy_slices
 
   echo
 fi
@@ -112,8 +112,8 @@ if [ "$i" -eq 3 ] || [ "$i" -eq -1 ]; then
   echo "Training 2.5D CycleGAN on images with masked vesicles..."
 
   python train.py --dataroot ./datasets/vesicles_2.5d_tiff/vesicle_combined --name vesicles_with_masked_vesicles_cyclegan_2.5d_tiff --model cycle_gan --input_nc 3 --output_nc 3 --num_threads 24 --batch_size 6 --load_size 256 --crop_size 256 --preprocess none --no_flip --save_tiffs
-  python test.py --dataroot ./datasets/vesicles_2.5d_tiff/vesicle_combined --name vesicles_with_masked_vesicles_cyclegan_2.5d_tiff --model cycle_gan --input_nc 3 --output_nc 3 --num_threads 24 --batch_size 6 --load_size 256 --crop_size 256 --preprocess none --no_flip --save_tiffs --no_dropout --phase test --eval --num_test 1000000
-  python test.py --dataroot ./datasets/vesicles_2.5d_tiff/vesicle_combined --name vesicles_with_masked_vesicles_cyclegan_2.5d_tiff --model cycle_gan --input_nc 3 --output_nc 3 --num_threads 24 --batch_size 6 --load_size 256 --crop_size 256 --preprocess none --no_flip --save_tiffs --no_dropout --phase test_all_xy_slices --eval --num_test 1000000
+  python test.py --dataroot ./datasets/vesicles_2.5d_tiff/vesicle_combined --name vesicles_with_masked_vesicles_cyclegan_2.5d_tiff --model cycle_gan --input_nc 3 --output_nc 3 --num_threads 24 --batch_size 6 --load_size 256 --crop_size 256 --preprocess none --no_flip --save_tiffs --eval --no_dropout --num_test 1000000 --phase test
+  python test.py --dataroot ./datasets/vesicles_2.5d_tiff/vesicle_combined --name vesicles_with_masked_vesicles_cyclegan_2.5d_tiff --model cycle_gan --input_nc 3 --output_nc 3 --num_threads 24 --batch_size 6 --load_size 256 --crop_size 256 --preprocess none --no_flip --save_tiffs --eval --no_dropout --num_test 1000000 --phase test_all_xy_slices
 
   echo
 fi
