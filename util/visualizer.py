@@ -168,7 +168,7 @@ class Visualizer:
                 ims, txts, links = [], [], []
 
                 for label, image in visuals.items():
-                    img_path = f"epoch{n:03d}_{label}" + self.filename_out_img_format
+                    img_path = f"epoch{n:03d}_{label}.png"
                     ims.append(img_path)
                     txts.append(label)
                     links.append(img_path)
